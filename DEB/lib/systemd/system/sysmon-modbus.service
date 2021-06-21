@@ -1,0 +1,26 @@
+[Unit]
+Description=Sysmon modbus service
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/run/sysmon_modbus.service.pid
+User=root
+Group=root
+Restart=always
+WorkingDirectory=/var/lib/sysmon/
+ExecStart=/bin/bash /var/lib/sysmon/start_modbus.sh
+Environment="NODE_ENV=production"
+Environment="TOKEN_SECRET=anySecretKey"
+Environment="DB_USER=conroller_header_user"
+Environment="DB_PASSWORD=111111"
+Environment="DB_NAME=conroller_header"
+Environment="DB_HOST=127.0.0.1"
+Environment="HOST=172.28.1.88"
+Environment="PORT=3002"
+StandardOutput=file:/var/log/sysmon/modbus/modbus.log
+StandardError=file:/var/log/sysmon/modbus/modbus-err.log
+SyslogIdentifier=sysmon-modbus
+
+[Install]
+WantedBy=multi-user.target

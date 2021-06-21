@@ -1,0 +1,39 @@
+#!/bin/bash
+set -e
+
+if [ "$1" = "configure" ]; then
+
+    modbus_LOG_DIR=/var/log/sysmon/modbus
+    modbus_LIB_DIR=/var/lib/sysmon/modbus
+
+    if ! getent group sysmon > /dev/null 2>&1 ; then
+        addgroup --system --quiet sysmon
+    fi
+
+    if ! getent passwd sysmon > /dev/null 2>&1 ; then
+        adduser --quiet \
+            --system --disabled-login --ingroup sysmon \
+            --home /var/lib/sysmon/ --no-create-home \
+            sysmon
+    fi
+
+    [ ! -d "${modbus_LOG_DIR}" ] && mkdir -p "${modbus_LOG_DIR}"
+    [ ! -d "${modbus_LIB_DIR}" ] && mkdir -p "${modbus_LIB_DIR}"
+    chown root:root /etc/logrotate.d/*
+    chown sysmon:sysmon "${modbus_LOG_DIR}" -R
+    chown sysmon:sysmon "${modbus_LIB_DIR}" -R
+    cd "${modbus_LIB_DIR}"
+
+    if [ -f "/lib/systemd/system/sysmon-modbus.service" ]; then
+        systemctl stop sysmon-modbus.service
+        systemctl daemon-reload
+        systemctl enable sysmon-modbus.service
+        systemctl start sysmon-modbus.service
+        systemctl -l status sysmon-modbus.service
+
+        systemctl restart rsyslog
+    fi
+fi
+
+
+exit 0

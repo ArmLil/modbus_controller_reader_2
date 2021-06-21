@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ -f "/lib/systemd/system/sysmon-modbus.service" ]; then
+    systemctl stop sysmon-modbus.service
+    systemctl disable sysmon-modbus.service
+    systemctl daemon-reload
+fi
+
+exit $?

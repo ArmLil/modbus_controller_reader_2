@@ -1,0 +1,18 @@
+{
+  "name": "promtorg_modbus_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ArmLil",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "jsmodbus": "^4.0.5",
+    "modbus-serial": "^8.0.1",
+    "socket.io-client": "^4.1.2"
+  }
+}
