@@ -49,13 +49,13 @@ setInterval(() => {
         " registers[i].address = ",
         "0x" + registers[i].address.toString(16)
       );
-      let value = 1000.123456;
-      if (registers[i].name === "revs") {
-        value = Number(value).toFixed(0);
-      } else {
-        value = Number(value).toFixed(3);
-      }
-      console.log({ value });
+      // let value = 1000.123456;
+      // if (registers[i].name === "revs") {
+      //   value = Number(value).toFixed(0);
+      // } else {
+      //   value = Number(value).toFixed(3);
+      // }
+      // console.log({ value });
       // ///////////////////////////////////////////5.1
       // await axios({
       //   method: "put",
