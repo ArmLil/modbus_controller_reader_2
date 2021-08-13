@@ -4,6 +4,8 @@ const axios = require("axios");
 // create an empty modbus client
 var ModbusRTU = require("modbus-serial");
 
+const nasosiControllers = ["1.1, 2.1", "3.1", "4.1", "6.1", "7.1"];
+
 let {
   controllerId,
   registers,
@@ -75,6 +77,11 @@ setInterval(() => {
           if (registers[i].type === "Unsigned int") {
             value = readResponse.buffer.readUInt16BE();
           }
+          if (registers[i].name === "revs") {
+            value = Number(value).toFixed(0);
+          } else {
+            value = Number(value).toFixed(3);
+          }
           console.log({ value });
           // let registerAddress;
           // if (registers[i].address.toString() === "5") {
@@ -104,56 +111,32 @@ setInterval(() => {
                 // error.response.data
               );
             });
+
+          nasosiControllers.forEach((contrId, i) => {
+            axios({
+              method: "put",
+              url: `http://${headerHost}:${headerPort}/api/v1/registers_Controllers_values/`,
+              data: {
+                controllerModbusId: contrId,
+                registerAddress: "0x" + registers[i].address.toString(16),
+                // registerAddress: registerAddress,
+                value: value,
+              },
+            })
+              .then((res) => {
+                if (res.data) console.log(res.data);
+                else console.log(res);
+              })
+              .catch((error) => {
+                console.error(
+                  "error response ",
+                  error.message
+                  // error.response.data
+                );
+              });
+          });
         })
         .catch(console.error);
     }
   })();
-
-  // registers.forEach(async (reg, i) => {
-  //   await registerMethods
-  //     ._readHoldingRegisters(
-  //       (addr = reg.address),
-  //       (reg_len = reg.leng),
-  //       (device_id = controllerId),
-  //       client
-  //     )
-  //     .then((readResponse) =>
-  //       console.log("readResponse = ", { readResponse }, "\n")
-  //     )
-  //     .catch(console.error);
-  // });
-
-  // await registerMethods
-  //   ._readHoldingRegisters(
-  //     (addr = registers[0].address),
-  //     (reg_len = registers[0].leng),
-  //     (device_id = controllerId),
-  //     client
-  //   )
-  //   .then((readResponse) =>
-  //     console.log("readResponse = ", { readResponse }, "\n")
-  //   )
-  //   .catch(console.error);
-
-  // _writeRegisters((addr = 5), (values_arr = [0, 0xffff]), (device_id = 3)).then(
-  //   res => {
-  //     console.log({ res });
-  //     readHoldingRegs(res.address, res.length).catch(console.error);
-  //   }
-  // ).catch(console.error);
-  // await _readCoils(16, 4, 1)
-  //   .then(coilStatusResponse => {
-  //     console.log("coilStatusResponse=", { coilStatusResponse });
-  //   })
-  //   .catch(console.error);
-  // await _readInputRegisters(2, 1, 1)
-  //   .then(readInputRegsResponse => {
-  //     console.log("readInputRegsResponse=", readInputRegsResponse);
-  //   })
-  //   .catch(console.error);
-  // await _readDiscreteInputs(0, 5, 1)
-  //   .then(readDiscreteInputsResponse => {
-  //     console.log("readDiscreteInputsResponse=", readDiscreteInputsResponse);
-  //   })
-  //   .catch(console.error);
 }, interval);

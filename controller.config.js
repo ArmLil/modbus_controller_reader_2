@@ -3,7 +3,7 @@ module.exports = {
   // headerHost: "127.0.0.1",
   headerHost: "172.28.1.88",
   headerPort: "3002",
-  controllerId: 1,
+  controllerId: "5.1",
   // controllerPort: "/dev/tnt1",
   controllerPort: "/dev/ttyS0",
   modbusOptions: {
@@ -13,6 +13,7 @@ module.exports = {
     stopBits: 1,
   },
   interval: 5000, // 5 sec
+  interval: 10000, // 10 sec
 
   registers: [
     //test registers
@@ -26,16 +27,19 @@ module.exports = {
     // },
     //состояние насоса
     {
+      name: "revs",
       address: 0x1600,
       leng: 2,
       type: "Unsigned int",
     },
     {
+      name: "p_in",
       address: 0x1602,
       leng: 2,
       type: "Float",
     },
     {
+      name: "p_out",
       address: 0x1604,
       leng: 2,
       type: "Float",
