@@ -12,8 +12,8 @@ module.exports = {
     dataBits: 8,
     stopBits: 1,
   },
-  interval: 5000, // 5 sec
-  interval: 10000, // 10 sec
+  interval: 3000, // 3 sec
+  // interval: 10000, // 10 sec
 
   registers: [
     //test registers
