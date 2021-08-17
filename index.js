@@ -237,7 +237,7 @@ setInterval(() => {
             value = readResponse.buffer.readDoubleBE();
           }
           if (registers[i].type === "Unsigned int") {
-            value = readResponse.buffer.readUInt16BE();
+            value = readResponse.buffer.readUInt16BE(2);
           }
           if (registers[i].name === "revs") {
             value = Number(value).toFixed(0);
@@ -335,27 +335,27 @@ setInterval(() => {
               );
             });
           //////////////////////////////////////////////4.1
-          axios({
-            method: "put",
-            url: `http://${headerHost}:${headerPort}/api/v1/registers_Controllers_values/`,
-            data: {
-              controllerModbusId: "4.1",
-              registerAddress: "0x" + registers[i].address.toString(16),
-              // registerAddress: registerAddress,
-              value: value,
-            },
-          })
-            .then((res) => {
-              if (res.data) console.log(res.data);
-              else console.log(res);
-            })
-            .catch((error) => {
-              console.error(
-                "error response ",
-                error.message
-                // error.response.data
-              );
-            });
+          // axios({
+          //   method: "put",
+          //   url: `http://${headerHost}:${headerPort}/api/v1/registers_Controllers_values/`,
+          //   data: {
+          //     controllerModbusId: "4.1",
+          //     registerAddress: "0x" + registers[i].address.toString(16),
+          //     // registerAddress: registerAddress,
+          //     value: value,
+          //   },
+          // })
+          //   .then((res) => {
+          //     if (res.data) console.log(res.data);
+          //     else console.log(res);
+          //   })
+          //   .catch((error) => {
+          //     console.error(
+          //       "error response ",
+          //       error.message
+          //       // error.response.data
+          //     );
+          //   });
           //////////////////////////////////////////////6.1
           axios({
             method: "put",
