@@ -1,7 +1,7 @@
 module.exports = {
   clientId: 247,
-  // headerHost: "127.0.0.1",
-  headerHost: "172.28.1.88",
+  headerHost: "127.0.0.1",
+  // headerHost: "172.28.1.88",
   headerPort: "3002",
   controllerId: "5.1",
   // controllerPort: "/dev/tnt1",
@@ -16,16 +16,6 @@ module.exports = {
   // interval: 10000, // 10 sec
 
   registers: [
-    //test registers
-    // {
-    //   address: 5,
-    //   leng: 1,
-    // },
-    // {
-    //   address: 6,
-    //   leng: 1,
-    // },
-    //состояние насоса
     {
       name: "revs",
       address: 0x1600,

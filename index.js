@@ -31,11 +31,12 @@ var client = new ModbusRTU();
 const socketio = require("socket.io-client");
 const socket = socketio.connect(`http://${headerHost}:${headerPort}`);
 
-socket.on("connect", (socket) => {
+socket.on("connect", (_socket) => {
   console.log("socket connected");
+  socket.emit("newController", { controllerId });
 });
 
-socket.emit("private message", { user: "me", msg: "whazzzup?" });
+let controllerStatus = "offline";
 
 // open connection to a serial port
 client.connectRTUBuffered(controllerPort, modbusOptions).catch(console.error);
@@ -49,7 +50,8 @@ setInterval(() => {
         " registers[i].address = ",
         "0x" + registers[i].address.toString(16)
       );
-      // let value = 1000.123456;
+      // test code
+      // let value = Math.random();
       // if (registers[i].name === "revs") {
       //   value = Number(value).toFixed(0);
       // } else {
@@ -211,6 +213,7 @@ setInterval(() => {
       //     );
       //   });
       // ////////////////////////////////////////////
+      //end test code
       await registerMethods
         ._readHoldingRegisters(
           (addr = registers[i].address.toString()),
@@ -229,7 +232,11 @@ setInterval(() => {
             "controllerModbusId=",
             controllerId.toString()
           );
-          // let value = null;
+          if (controllerStatus === "offline") {
+            controllerStatus = "online";
+            socket.emit("controllerStatus", { controllerId, controllerStatus });
+          }
+          let value = null;
           if (registers[i].type === "Float") {
             value = readResponse.buffer.readFloatBE();
           }
@@ -402,7 +409,13 @@ setInterval(() => {
             });
           ////////////////////////////////////////////
         })
-        .catch(console.error);
+        .catch((err) => {
+          console.error(err);
+          if (controllerStatus === "online") {
+            controllerStatus = "offline";
+            socket.emit("controllerStatus", { controllerId, controllerStatus });
+          }
+        });
     }
   })();
 }, interval);
